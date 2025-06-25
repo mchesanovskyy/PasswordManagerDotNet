@@ -1,20 +1,24 @@
-﻿using PasswordManager.Core.Entities;
-using PasswordManager.Core.Storages;
+﻿using System.Text.RegularExpressions;
 
-var storage = new FileVaultStorage();
-var vault = storage.Load("vault.json");
-
-vault.Entries.Add(new PasswordEntry
+var application = new CLIApplication();
+while (true)
 {
-    Service = "discord.com 2",
-    Login = "mylogin",
-    Password = "MySecurePass123"
-});
+    Console.Write(":> ");
+    var argumentsInput = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(argumentsInput))
+    {
+        Console.WriteLine("no args");
+        continue;
+    }
 
-storage.Save("vault.json", vault);
+    var arguments = SplitArguments(argumentsInput);
+    application.Run(arguments);
+}
 
-Console.WriteLine("Test Data:");
-foreach (var entry in vault.Entries)
+static string[] SplitArguments(string input)
 {
-    Console.WriteLine($"Service: {entry.Service}, Login: {entry.Login}, Pass: {entry.Password}");
+    var matches = Regex.Matches(input, @"[\""].+?[\""]|[^ ]+")
+        .Select(m => m.Value.Trim('"'))
+        .ToArray();
+    return matches;
 }
