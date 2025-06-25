@@ -1,21 +1,17 @@
-﻿
-using PasswordManager.Core.Entities;
+﻿using PasswordManager.Core.Entities;
+using PasswordManager.Core.Storages;
 
-var vault = new Vault();
-
-vault.Entries.Add(new PasswordEntry
-{
-    Service = "gmail.com",
-    Login = "user@gmail.com",
-    Password = "qwerty123"
-});
+var storage = new FileVaultStorage();
+var vault = storage.Load("vault.json");
 
 vault.Entries.Add(new PasswordEntry
 {
-    Service = "github.com",
-    Login = "dev123",
-    Password = "securePass!"
+    Service = "discord.com 2",
+    Login = "mylogin",
+    Password = "MySecurePass123"
 });
+
+storage.Save("vault.json", vault);
 
 Console.WriteLine("Test Data:");
 foreach (var entry in vault.Entries)
