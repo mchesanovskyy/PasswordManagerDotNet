@@ -2,9 +2,9 @@
 
 namespace PasswordManagerCLI.CommandOptions.VaultEntries;
 
-[Verb("remove", HelpText = "Load vault file.")]
+[Verb("remove", HelpText = "Remove vault entry record.")]
 class RemoveVaultEntryOptions
 {
-    [Option("id", Required = true)]
+    [Option('i', "id", Required = true)]
     public int Id { get; set; }
 }

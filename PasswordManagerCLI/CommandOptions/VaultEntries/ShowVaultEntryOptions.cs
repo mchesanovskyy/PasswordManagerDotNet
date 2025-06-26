@@ -2,9 +2,9 @@
 
 namespace PasswordManagerCLI.CommandOptions.VaultEntries;
 
-[Verb("show", HelpText = "Load vault file.")]
+[Verb("show", HelpText = "Show vault entry record.")]
 class ShowVaultEntryOptions
 {
-    [Option("id", Required = true)]
+    [Option('i', "id", Required = true)]
     public int Id { get; set; }
 }
