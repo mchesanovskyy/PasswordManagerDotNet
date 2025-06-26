@@ -3,10 +3,12 @@ using PasswordManager.Core.Entities;
 using PasswordManager.Core.Storages;
 using PasswordManagerCLI;
 using PasswordManagerCLI.CommandOptions;
+using PasswordManagerCLI.Helpers;
 
 class CLIApplication
 {
     private readonly LocalSessionContext _sessionContext;
+
     public CLIApplication()
     {
         _sessionContext = new LocalSessionContext();
@@ -14,13 +16,28 @@ class CLIApplication
 
     public void Run(string[] args)
     {
-        
-        Parser.Default.ParseArguments<LoadVaultOptions, AddVaultEntryOptions, SaveVaultOptions,
-                PrintVaultEntriesOptions>(args)
-            .WithParsed<LoadVaultOptions>(options => LoadVault(options, _sessionContext))
-            .WithParsed<AddVaultEntryOptions>(options => AddVaultEntry(options, _sessionContext))
-            .WithParsed<SaveVaultOptions>(options => SaveVault(options, _sessionContext))
-            .WithParsed<PrintVaultEntriesOptions>(options => PrintVault(options, _sessionContext));
+        try
+        {
+            Parser.Default.ParseArguments<LoadVaultOptions, AddVaultEntryOptions, SaveVaultOptions,
+                    PrintVaultEntriesOptions, CreateVaultOptions>(args)
+                .WithParsed<LoadVaultOptions>(options => LoadVault(options, _sessionContext))
+                .WithParsed<AddVaultEntryOptions>(options => AddVaultEntry(options, _sessionContext))
+                .WithParsed<SaveVaultOptions>(options => SaveVault(options, _sessionContext))
+                .WithParsed<PrintVaultEntriesOptions>(options => PrintVault(options, _sessionContext))
+                .WithParsed<CreateVaultOptions>(options => CreateVault(options, _sessionContext));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    private void CreateVault(CreateVaultOptions options, LocalSessionContext sessionContext)
+    {
+        sessionContext.CurrentVault = new Vault
+        {
+            FileName = options.FileName
+        };
     }
 
     private void PrintVault(PrintVaultEntriesOptions options, LocalSessionContext sessionContext)
@@ -45,8 +62,9 @@ class CLIApplication
             return;
         }
 
+        var secret = ConsoleHelper.ReadSecretFromConsole();
         var vaultStorage = new FileVaultStorage();
-        vaultStorage.Save(options.FileName, sessionContext.CurrentVault);
+        vaultStorage.Save(options.FileName, sessionContext.CurrentVault, secret);
         Console.WriteLine("Vault saved");
     }
 
@@ -69,8 +87,10 @@ class CLIApplication
 
     private void LoadVault(LoadVaultOptions options, LocalSessionContext sessionContext)
     {
+        var secret = ConsoleHelper.ReadSecretFromConsole();
+
         var vaultStorage = new FileVaultStorage();
-        var vault = vaultStorage.Load(options.FileName);
+        var vault = vaultStorage.Load(options.FileName, secret);
         sessionContext.CurrentVault = vault;
         Console.WriteLine("Vault loaded");
     }
