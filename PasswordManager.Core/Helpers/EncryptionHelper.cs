@@ -1,9 +1,6 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
-using PasswordManager.Core.Entities;
 
-namespace PasswordManager.Core.Storages;
+namespace PasswordManager.Core.Helpers;
 
 public static class EncryptionHelper
 {
@@ -65,42 +62,5 @@ public static class EncryptionHelper
         using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(bytes);
         return bytes;
-    }
-}
-
-public class FileVaultStorage : IVaultStorage
-{
-    public Vault Create()
-    {
-        return new Vault();
-    }
-
-    public Vault Load(string filePath, string secret)
-    {
-        if (!File.Exists(filePath))
-        {
-            throw new Exception("Vault not exist");
-        }
-
-        try
-        {
-            var encryptedContent = File.ReadAllBytes(filePath);
-            var content = EncryptionHelper.Decrypt(encryptedContent, secret);
-            var vault = JsonSerializer.Deserialize<Vault>(content)!;
-            vault.FileName = filePath;
-            return vault;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Can't decrypt or parse vault", ex);
-        }
-    }
-
-    public bool Save(string filePath, Vault vault, string secret)
-    {
-        var jsonFileContent = JsonSerializer.SerializeToUtf8Bytes(vault);
-        var encryptedData = EncryptionHelper.Encrypt(jsonFileContent, secret);
-        File.WriteAllBytes(filePath, encryptedData);
-        return true;
     }
 }

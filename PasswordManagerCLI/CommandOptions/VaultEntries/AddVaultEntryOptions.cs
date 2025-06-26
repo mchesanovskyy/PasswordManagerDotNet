@@ -1,8 +1,8 @@
 ﻿using CommandLine;
 
-namespace PasswordManagerCLI.CommandOptions;
+namespace PasswordManagerCLI.CommandOptions.VaultEntries;
 
-[Verb("add", HelpText = "Load vault file.")]
+[Verb("add", HelpText = "Add new entry to a vault.")]
 class AddVaultEntryOptions
 {
     [Option('s', "service", Required = true)]

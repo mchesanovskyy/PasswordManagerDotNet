@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace PasswordManagerCLI.CommandOptions;
+namespace PasswordManagerCLI.CommandOptions.VaultEntries;
 
 [Verb("print", HelpText = "Print vault entries.")]
 class PrintVaultEntriesOptions

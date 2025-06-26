@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace PasswordManagerCLI.CommandOptions;
+namespace PasswordManagerCLI.CommandOptions.Vaults;
 
 [Verb("save", HelpText = "Save vault to a file.")]
 class SaveVaultOptions

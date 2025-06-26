@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using PasswordManagerCLI;
 
 var application = new CLIApplication();
 while (true)

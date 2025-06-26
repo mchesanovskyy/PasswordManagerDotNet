@@ -4,8 +4,8 @@ namespace PasswordManager.Core.Storages
 {
     public interface IVaultStorage
     {
-        Vault Create();
-        Vault Load(string filePath, string secret);
-        bool Save(string filePath, Vault vault, string secret);
+        Vault Create(string fileName);
+        Vault Load(string fileName, string secret);
+        bool Save(Vault vault, string secret);
     }
 }
